@@ -443,9 +443,9 @@ class DraggableFlatList extends Component {
     setRef(ref) {
         this._flatList = ref;
         if(this.props.ref) {
-            try{
+            try {
                 this.props.ref(ref);
-            catch(e){}
+            } catch(e){}
         }
     }
     
