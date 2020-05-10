@@ -225,6 +225,7 @@ class DraggableFlatList extends Component {
         const sizeNext = this._size[nextIndex];
         const positionNext = this._position[nextIndex];
 
+        this._moveDirection = 'unkown';
         if (!sizePrevious || sizePrevious <= 0 || !positionPrevious || positionPrevious <= 0) {
             this._previousIndex = this._previousIndex - 1;
             if (this._previousIndex < 0) {
@@ -254,6 +255,7 @@ class DraggableFlatList extends Component {
                             found = true;
                         }
                     }
+                    this._moveDirection = 'up';
                     this._noNext = false;
                     this._noPrevious = !found;
                     this.forceUpdate();
@@ -386,7 +388,7 @@ class DraggableFlatList extends Component {
                 }}
                 style={[styles.fullOpacity, { flexDirection: horizontal ? 'row' : 'column' }]} >
                 {
-                    (firstItem && index === 0)? ( spacer ): null
+                    ((firstItem && index === 0) || (this._moveDirection == 'up' && isSpacerRow))? ( spacer ): null
                 }
                 <RowItem
                     horizontal={horizontal}
@@ -399,7 +401,7 @@ class DraggableFlatList extends Component {
                     extraData={this.state.extraData}
                 />
                 {
-                    (!firstItem && isSpacerRow)? ( spacer ): null
+                    (!firstItem && isSpacerRow && this._moveDirection != 'up')? ( spacer ): null
                 }
             </View>
         )
