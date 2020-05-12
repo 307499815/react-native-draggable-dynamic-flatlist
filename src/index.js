@@ -225,7 +225,7 @@ class DraggableFlatList extends Component {
         const sizeNext = this._size[nextIndex];
         const positionNext = this._position[nextIndex];
 
-        this._moveDirection = 'unkown';
+        
         if (!sizePrevious || sizePrevious <= 0 || !positionPrevious || positionPrevious <= 0) {
             this._previousIndex = this._previousIndex - 1;
             if (this._previousIndex < 0) {
@@ -255,10 +255,10 @@ class DraggableFlatList extends Component {
                             found = true;
                         }
                     }
-                    this._moveDirection = 'up';
                     this._noNext = false;
                     this._noPrevious = !found;
                     this.forceUpdate();
+
                     return;
                 }
             }
@@ -292,9 +292,11 @@ class DraggableFlatList extends Component {
                             found = true;
                         }
                     }
+
                     this._noPrevious = false;
                     this._noNext = !found;
                     this.forceUpdate();
+
                     return;
                 }
             }
@@ -358,10 +360,10 @@ class DraggableFlatList extends Component {
 
     renderItem = ({ item, index }) => {
         const { renderItem, horizontal, data, spacerStyle } = this.props;
-        const _spacerIndex = this._tappedRow === data.length -1? this._spacerIndex-1: this._spacerIndex;
+        const _spacerIndex = this._spacerIndex;
         const isActiveRow = this._tappedRow === index;
         const isSpacerRow = _spacerIndex === index;
-        const firstItem = this._noPrevious && this._tappedRow !== -1;
+        const spacerBefore = this._tappedRow > _spacerIndex;
 
         const spacer = (
             <View
@@ -382,13 +384,13 @@ class DraggableFlatList extends Component {
             <View
                 onLayout={e => {
                     if (index !== this._tappedRow) {
-                        this._size[index] = e.nativeEvent.layout[horizontal ? 'width' : 'height'] - (((firstItem && index === 0) || (!firstItem && isSpacerRow))? this._tappedRowSize: 0);
+                        this._size[index] = e.nativeEvent.layout[horizontal ? 'width' : 'height'] - (isSpacerRow? this._tappedRowSize: 0);
                         this.initPositions();
                     }
                 }}
                 style={[styles.fullOpacity, { flexDirection: horizontal ? 'row' : 'column' }]} >
                 {
-                    ((firstItem && index === 0) || (this._moveDirection == 'up' && isSpacerRow))? ( spacer ): null
+                    (spacerBefore && isSpacerRow)? ( spacer ): null
                 }
                 <RowItem
                     horizontal={horizontal}
@@ -401,7 +403,7 @@ class DraggableFlatList extends Component {
                     extraData={this.state.extraData}
                 />
                 {
-                    (!firstItem && isSpacerRow && this._moveDirection != 'up')? ( spacer ): null
+                    (isSpacerRow && !spacerBefore)? ( spacer ): null
                 }
             </View>
         )
