@@ -108,7 +108,36 @@ class DraggableFlatList extends Component {
         if (prevProps.extraData !== this.props.extraData) {
             this.setState({ extraData: this.props.extraData })
         }
+        
+        if(prevProps.data && this.props.data && prevProps.data.length != this.props.data.length) {
+            try {
+                this.onDataLengthChanged();
+            }catch(e) {
+                console.log('onDataLengthChanged error', e);
+            }
+        }
     };
+
+    onDataLengthChanged() {
+        const {data} = this.props;
+        this._order = [];
+        for (let i = 0; i < data.length; i++) {
+            this._order[i] = i;
+        }
+
+        const oldSize = this._size;
+        this._size = [];
+        if(oldSize && oldSize.forEach) {
+            oldSize.forEach((size,index)=>{
+                if(index < data.length) {
+                    this._size[index] = size;
+                }
+            })
+        }
+
+        this._position = [];
+        this.initPositions();
+    }
 
     initPositions = () => {
         let currentPos = this._containerOffset + this._headerSize;
