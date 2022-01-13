@@ -258,6 +258,7 @@ class DraggableFlatList extends Component {
                     }
                     this._noNext = false;
                     this._noPrevious = !found;
+                    this.props.onMoveOver?.(this._tappedRow, this._spacerIndex, this._previousIndex);
                     this.forceUpdate();
 
                     return;
@@ -296,6 +297,7 @@ class DraggableFlatList extends Component {
 
                     this._noPrevious = false;
                     this._noNext = !found;
+                    this.props.onMoveOver?.(this._tappedRow, this._spacerIndex, this._previousIndex);
                     this.forceUpdate();
 
                     return;
@@ -401,7 +403,7 @@ class DraggableFlatList extends Component {
                     item={item}
                     move={this.move}
                     moveEnd={this.moveEnd}
-                    extraData={this.state.extraData}
+                    extraData={this.state.extraData?.[index] || this.state.extraData}
                 />
                 {
                     (isSpacerRow && !spacerBefore)? ( spacer ): null
