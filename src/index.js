@@ -546,7 +546,7 @@ class RowItem extends React.PureComponent {
             moveEnd,
         });
         let wrapperStyle = { opacity: 1 };
-        if (isActiveRow) wrapperStyle = { display: 'none' };
+        if (isActiveRow) wrapperStyle = { width:0, height:0, opacity: 0 };
 
         // Rendering the final row requires padding to be applied at the bottom
         return (
